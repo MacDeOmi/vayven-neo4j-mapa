@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Va y Ven — MAPA</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+
+      --bg-light: #f2f5fa;
+      --bg-dark: #0b111a;
+      --surface-light: #ffffff;
+      --surface-dark: #141c28;
+      --surface-alt-light: #f5f8fc;
+      --surface-alt-dark: #1b2535;
+      --text-light: #131c28;
+      --text-dark: #eef3f9;
+      --muted-light: #556375;
+      --muted-dark: #9cb0c7;
+      --border-light: #dbe3ee;
+      --border-dark: #2a374b;
+
+      --brand-light: #0057d8;
+      --brand-dark: #58a6ff;
+      --brand-contrast-light: #ffffff;
+      --brand-contrast-dark: #06182e;
+
+      --ok-light: #0f7b3f;
+      --ok-dark: #5ad78a;
+      --ok-bg-light: #e6f6ec;
+      --ok-bg-dark: #102d1e;
+
+      --warn-light: #b45309;
+      --warn-dark: #fbbf24;
+      --warn-bg-light: #fef3c7;
+      --warn-bg-dark: #2d2209;
+
+      --err-light: #c5221f;
+      --err-dark: #f87171;
+      --err-bg-light: #fee2e2;
+      --err-bg-dark: #351417;
+
+      --dest-light: #7c3aed;
+      --dest-dark: #c084fc;
+
+      --shadow-light: 0 10px 28px rgb(15 23 42 / 0.06);
+      --shadow-dark: 0 12px 30px rgb(0 0 0 / 0.35);
+
+      --bg: var(--bg-light);
+      --surface: var(--surface-light);
+      --surface-alt: var(--surface-alt-light);
+      --text: var(--text-light);
+      --muted: var(--muted-light);
+      --border: var(--border-light);
+      --brand: var(--brand-light);
+      --brand-contrast: var(--brand-contrast-light);
+      --ok: var(--ok-light);
+      --ok-bg: var(--ok-bg-light);
+      --warn: var(--warn-light);
+      --warn-bg: var(--warn-bg-light);
+      --err: var(--err-light);
+      --err-bg: var(--err-bg-light);
+      --dest: var(--dest-light);
+      --shadow: var(--shadow-light);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --surface: var(--surface-dark);
+        --surface-alt: var(--surface-alt-dark);
+        --text: var(--text-dark);
+        --muted: var(--muted-dark);
+        --border: var(--border-dark);
+        --brand: var(--brand-dark);
+        --brand-contrast: var(--brand-contrast-dark);
+        --ok: var(--ok-dark);
+        --ok-bg: var(--ok-bg-dark);
+        --warn: var(--warn-dark);
+        --warn-bg: var(--warn-bg-dark);
+        --err: var(--err-dark);
+        --err-bg: var(--err-bg-dark);
+        --dest: var(--dest-dark);
+        --shadow: var(--shadow-dark);
+      }
+    }
+
+    @supports (color: light-dark(white, black)) {
+      :root {
+        --bg: light-dark(var(--bg-light), var(--bg-dark));
+        --surface: light-dark(var(--surface-light), var(--surface-dark));
+        --surface-alt: light-dark(var(--surface-alt-light), var(--surface-alt-dark));
+        --text: light-dark(var(--text-light), var(--text-dark));
+        --muted: light-dark(var(--muted-light), var(--muted-dark));
+        --border: light-dark(var(--border-light), var(--border-dark));
+        --brand: light-dark(var(--brand-light), var(--brand-dark));
+        --brand-contrast: light-dark(var(--brand-contrast-light), var(--brand-contrast-dark));
+        --ok: light-dark(var(--ok-light), var(--ok-dark));
+        --ok-bg: light-dark(var(--ok-bg-light), var(--ok-bg-dark));
+        --warn: light-dark(var(--warn-light), var(--warn-dark));
+        --warn-bg: light-dark(var(--warn-bg-light), var(--warn-bg-dark));
+        --err: light-dark(var(--err-light), var(--err-dark));
+        --err-bg: light-dark(var(--err-bg-light), var(--err-bg-dark));
+        --dest: light-dark(var(--dest-light), var(--dest-dark));
+        --shadow: light-dark(var(--shadow-light), var(--shadow-dark));
+      }
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      accent-color: var(--brand);
+      scrollbar-color: var(--border) var(--surface-alt);
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
+      background-color: var(--bg);
+      background-image: radial-gradient(900px 320px at 50% -10%, color-mix(in srgb, var(--brand) 12%, transparent), transparent);
+      color: var(--text);
+      min-block-size: 100dvb;
+    }
+
+    .visually-hidden:where(:not(:focus-within, :active)) {
+      position: absolute !important;
+      clip-path: inset(50%) !important;
+      overflow: hidden !important;
+      inline-size: 1px !important;
+      block-size: 1px !important;
+      margin: -1px !important;
+      padding: 0 !important;
+      border: 0 !important;
+      white-space: nowrap !important;
+    }
+
+    .shell {
+      max-inline-size: 980px;
+      margin-inline: auto;
+      padding-block: 1.35rem 3rem;
+      padding-inline: 1rem;
+      display: grid;
+      gap: 1.1rem;
+    }
+
+    .header {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1rem 1.3rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: safe center;
+      justify-content: space-between;
+      gap: 0.85rem;
+    }
+
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-icon {
+      inline-size: 44px;
+      block-size: 44px;
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--brand) 14%, var(--surface-alt));
+      color: var(--brand);
+      display: grid;
+      place-items: center;
+      flex: none;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+    }
+
+    .header p {
+      margin: 0.15rem 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding-block: 0.35rem;
+      padding-inline: 0.85rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+    }
+
+    .status-pill::before {
+      content: "";
+      inline-size: 8px;
+      block-size: 8px;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .status-pill[data-state="ok"] {
+      color: var(--ok);
+      background: var(--ok-bg);
+      border-color: var(--ok);
+    }
+
+    .status-pill[data-state="unconfigured"],
+    .status-pill[data-state="degraded"] {
+      color: var(--warn);
+      background: var(--warn-bg);
+      border-color: var(--warn);
+    }
+
+    .status-pill[data-state="error"] {
+      color: var(--err);
+      background: var(--err-bg);
+      border-color: var(--err);
+    }
+
+    .notice {
+      border: 1px solid var(--warn);
+      background: var(--warn-bg);
+      border-radius: 12px;
+      padding: 0.85rem 1.1rem;
+      font-weight: 500;
+    }
+
+    .notice[hidden] {
+      display: none;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.2rem;
+      box-shadow: var(--shadow);
+      min-inline-size: 0;
+    }
+
+    .stack {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+      gap: 0.9rem;
+      align-items: end;
+    }
+
+    .row-between {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    /* ==================== FORMS & CONTROLS ==================== */
+    .field {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.25rem;
+    }
+
+    .field label {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    fieldset.tarifa-group {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.45rem 0.85rem;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.1rem;
+      align-items: center;
+    }
+
+    fieldset.tarifa-group legend {
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding-inline: 0.35rem;
+      color: var(--muted);
+    }
+
+    .radio-option {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      min-block-size: 34px;
+      font-size: 0.92rem;
+    }
+
+    .error-msg {
+      display: none;
+      color: var(--err);
+      font-size: 0.83rem;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    button {
+      font: inherit;
+      font-size: max(1rem, 1em);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      padding: 0.55rem 0.75rem;
+      min-block-size: 44px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    input:disabled,
+    select:disabled {
+      background: var(--surface-alt);
+      color: var(--text);
+      opacity: 0.9;
+      cursor: not-allowed;
+    }
+
+    input:focus-visible,
+    select:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--brand);
+      outline-offset: 2px;
+    }
+
+    :is(input, select):is(:user-invalid, .user-invalid-fallback) {
+      border-color: var(--err);
+      background-color: var(--err-bg);
+    }
+
+    :is(input, select):is(:user-invalid, .user-invalid-fallback) + .error-msg {
+      display: block;
+    }
+
+    :is(input, select):user-valid {
+      border-color: var(--ok);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      min-block-size: 42px;
+      padding-block: 0.5rem;
+      padding-inline: 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.12s ease, filter 0.15s ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      filter: brightness(0.96);
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: var(--brand-contrast);
+      border-color: var(--brand);
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--brand) 25%, transparent);
+    }
+
+    .btn-danger {
+      background: var(--err-bg);
+      color: var(--err);
+      border-color: var(--err);
+    }
+
+    .btn-sm {
+      min-block-size: 36px;
+      padding-block: 0.3rem;
+      padding-inline: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .btn[aria-pressed="true"] {
+      background: var(--warn-bg);
+      color: var(--warn);
+      border-color: var(--warn);
+    }
+
+    .btn:disabled {
+      opacity: 0.42;
+      filter: grayscale(0.65);
+      cursor: not-allowed;
+    }
+
+    /* ==================== MAPA INTERACTIVO ==================== */
+    .map-title-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding-block-start: 0.35rem;
+      border-block-start: 1px solid var(--border);
+    }
+
+    .map-title-row h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      letter-spacing: 0.03em;
+    }
+
+    .map-frame {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface-alt);
+      padding: 0.5rem;
+      overflow: hidden;
+    }
+
+    .map-frame svg {
+      display: block;
+      inline-size: 100%;
+      block-size: auto;
+      max-block-size: 420px;
+    }
+
+    .map-edge-hit {
+      fill: none;
+      stroke: transparent;
+      stroke-width: 16;
+      cursor: pointer;
+    }
+
+    .map-edge {
+      fill: none;
+      stroke: var(--muted);
+      stroke-width: 2;
+      stroke-linecap: round;
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    .map-edge.is-dimmed {
+      opacity: 0.14;
+    }
+
+    .map-edge.is-active {
+      stroke: var(--ok);
+      stroke-width: 3.5;
+      opacity: 1;
+    }
+
+    .map-edge.is-selected {
+      stroke: var(--brand);
+      stroke-width: 3.5;
+      opacity: 1;
+    }
+
+    .map-edge-label {
+      font-size: 11px;
+      font-weight: 700;
+      fill: var(--ok);
+      pointer-events: none;
+    }
+
+    .map-edge-pill {
+      fill: var(--surface);
+      stroke: var(--ok);
+      stroke-width: 1.25;
+      pointer-events: none;
+    }
+
+    .map-node {
+      cursor: pointer;
+    }
+
+    .map-node:focus-visible rect {
+      outline: none;
+      stroke: var(--brand);
+      stroke-width: 3.5;
+    }
+
+    .map-node.is-dimmed {
+      opacity: 0.24;
+    }
+
+    .map-node rect {
+      fill: var(--surface);
+      stroke: var(--border);
+      stroke-width: 1.75;
+      transition: stroke-width 0.15s ease;
+    }
+
+    .map-node:hover rect {
+      stroke: var(--brand);
+      stroke-width: 2.5;
+    }
+
+    .map-node.is-active rect {
+      fill: var(--ok-bg);
+      stroke: var(--ok);
+      stroke-width: 2.5;
+      filter: drop-shadow(0 3px 6px rgb(0 0 0 / 0.14));
+    }
+
+    .map-node.is-endpoint rect {
+      stroke: var(--brand);
+      stroke-width: 3;
+    }
+
+    .map-node.is-selected rect {
+      stroke: var(--brand);
+      stroke-width: 3.25;
+      fill: color-mix(in srgb, var(--brand) 10%, var(--surface));
+    }
+
+    .map-node.is-dest-candidate rect,
+    .map-node.is-dest-candidate:hover rect {
+      stroke: var(--dest);
+      stroke-width: 3.25;
+      fill: color-mix(in srgb, var(--dest) 16%, var(--surface));
+    }
+
+    .map-node.is-dest-endpoint rect {
+      stroke: var(--dest);
+      stroke-width: 3;
+      fill: color-mix(in srgb, var(--dest) 12%, var(--surface));
+    }
+
+    #route-map-svg.is-connect-mode .map-node:hover rect,
+    #route-map-svg.is-connect-mode .map-node:focus-visible rect {
+      stroke: var(--warn);
+      stroke-width: 2.5;
+    }
+
+    #route-map-svg.is-connect-mode .map-node.is-selected rect {
+      stroke: var(--warn);
+      stroke-width: 3.25;
+      fill: color-mix(in srgb, var(--warn) 16%, var(--surface));
+    }
+
+    .map-order-badge {
+      fill: var(--ok);
+      stroke: var(--surface);
+      stroke-width: 2;
+      pointer-events: none;
+    }
+
+    .map-node.is-endpoint .map-order-badge {
+      fill: var(--brand);
+    }
+
+    .map-node.is-dest-endpoint .map-order-badge {
+      fill: var(--dest);
+    }
+
+    .map-order-text {
+      fill: var(--brand-contrast);
+      font-size: 11px;
+      font-weight: 800;
+      pointer-events: none;
+    }
+
+    .map-node text {
+      fill: var(--text);
+      pointer-events: none;
+    }
+
+    .map-node .node-sub {
+      fill: var(--muted);
+      font-size: 10px;
+    }
+
+    /* ==================== BARRA DE ACCIÓN RÁPIDA EN MAPA ==================== */
+    .inspector-bar {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface-alt);
+      padding: 0.9rem 1rem;
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .inspector-bar[hidden] {
+      display: none;
+    }
+
+    .chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .chip {
+      font-size: 0.82rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    /* ==================== RESULTADOS DE RUTA ==================== */
+    .results-grid {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+      gap: 0.75rem;
+    }
+
+    .metric-box {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      background: var(--surface-alt);
+      border-block-start: 3px solid var(--brand);
+    }
+
+    .metric-label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .metric-value {
+      font-size: 1.18rem;
+      font-weight: 700;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .step-card {
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .step-main {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      min-inline-size: 0;
+    }
+
+    .step-num {
+      inline-size: 28px;
+      block-size: 28px;
+      border-radius: 999px;
+      background: var(--ok);
+      color: var(--brand-contrast);
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+      flex: none;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border: 1px solid var(--border);
+    }
+
+    .badge-ok {
+      color: var(--ok);
+      background: var(--ok-bg);
+      border-color: var(--ok);
+    }
+
+    .badge-warn {
+      color: var(--warn);
+      background: var(--warn-bg);
+      border-color: var(--warn);
+    }
+
+    /* ==================== TOAST & DIALOGS ==================== */
+    .toast-region {
+      position: fixed;
+      inset-block-end: 1rem;
+      inset-inline-end: 1rem;
+      z-index: 20;
+      max-inline-size: min(92vw, 380px);
+    }
+
+    .toast {
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: 0 8px 24px rgb(0 0 0 / 0.18);
+      font-weight: 600;
+    }
+
+    .toast[data-kind="ok"] {
+      border-color: var(--ok);
+      color: var(--ok);
+      background: var(--ok-bg);
+    }
+
+    .toast[data-kind="err"] {
+      border-color: var(--err);
+      color: var(--err);
+      background: var(--err-bg);
+    }
+
+    dialog {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      color: var(--text);
+      max-inline-size: min(92vw, 440px);
+      inline-size: 100%;
+      padding: 1.25rem;
+      box-shadow: 0 18px 40px rgb(0 0 0 / 0.3);
+    }
+
+    dialog:modal {
+      overscroll-behavior: contain;
+    }
+
+    dialog::backdrop {
+      background: rgb(0 0 0 / 0.55);
+      overflow: hidden;
+      overscroll-behavior: contain;
+    }
+
+    dialog h2 {
+      margin-block-start: 0;
+      font-size: 1.15rem;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.65rem;
+      margin-block-start: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="header">
+      <div class="brand-lockup">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="3" width="16" height="14" rx="3"></rect>
+            <path d="M4 11h16"></path>
+            <circle cx="8" cy="14" r="1"></circle>
+            <circle cx="16" cy="14" r="1"></circle>
+            <path d="M7 17v2"></path>
+            <path d="M17 17v2"></path>
+          </svg>
+        </div>
+        <div>
+          <h1>Va y Ven — MAPA</h1>
+          <p>Toca cualquier parada o flecha en el mapa para viajar o editar la red.</p>
+        </div>
+      </div>
+      <span id="health-pill" class="status-pill" data-state="unconfigured" role="status" aria-live="polite">
+        Conectando...
+      </span>
+    </header>
+
+    <div id="service-notice" class="notice" hidden aria-live="polite"></div>
+
+    <main class="card stack" aria-labelledby="map-section-title">
+      <div class="map-title-row" style="border-block-start: 0; padding-block-start: 0;">
+        <div>
+          <h2 id="map-section-title">MAPA</h2>
+          <span id="map-legend" class="muted">Haz clic en una parada para salir/ir o editar la red</span>
+        </div>
+        <div class="actions-row">
+          <fieldset class="tarifa-group" aria-label="Tarifa">
+            <label class="radio-option">
+              <input type="radio" name="tipo_tarifa" value="general" checked>
+              <span>General ($12)</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="tipo_tarifa" value="estudiante">
+              <span>Estudiante ($5)</span>
+            </label>
+          </fieldset>
+          <button id="clear-route-btn" type="button" class="btn btn-sm" hidden>Limpiar trayecto</button>
+          <button id="open-create-parada" type="button" class="btn btn-primary btn-sm">+ Parada</button>
+          <button id="toggle-connect-btn" type="button" class="btn btn-sm" aria-pressed="false">+ Conexión</button>
+        </div>
+      </div>
+
+      <div class="map-frame">
+        <svg id="route-map-svg" viewBox="0 0 940 410" role="img" aria-label="Mapa interactivo de paradas y conexiones Va y Ven">
+          <defs>
+            <marker id="arrow-muted" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" style="fill: var(--muted);"></path>
+            </marker>
+            <marker id="arrow-route" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" style="fill: var(--ok);"></path>
+            </marker>
+            <marker id="arrow-selected" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" style="fill: var(--brand);"></path>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
+      <section id="inspector-bar" class="inspector-bar" hidden aria-live="polite"></section>
+
+      <div id="res-viaje" class="results-grid" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <!-- MODAL CREAR PARADA -->
+  <dialog id="create-parada-dialog" closedby="closerequest" aria-labelledby="create-parada-title">
+    <h2 id="create-parada-title">Nueva parada</h2>
+    <form id="form-crear-parada" class="stack" novalidate>
+      <div class="field">
+        <label for="par-id">Código (automático)</label>
+        <input
+          id="par-id"
+          name="id"
+          type="text"
+          disabled
+          readonly
+        >
+      </div>
+      <div class="field">
+        <label for="par-nombre">Nombre <span aria-hidden="true">*</span></label>
+        <input id="par-nombre" name="nombre" type="text" required minlength="2" maxlength="120" placeholder="Ej. Parque San Juan" data-error="err-par-nombre">
+        <div id="err-par-nombre" class="error-msg">
+          <span role="img" aria-label="Error">❌</span> Escribe un nombre válido.
+        </div>
+      </div>
+      <div class="field">
+        <label for="par-zona">Zona <span aria-hidden="true">*</span></label>
+        <input id="par-zona" name="zona" type="text" required minlength="2" maxlength="60" placeholder="Ej. Centro" data-error="err-par-zona">
+        <div id="err-par-zona" class="error-msg">
+          <span role="img" aria-label="Error">❌</span> Escribe una zona.
+        </div>
+      </div>
+      <div class="field">
+        <label for="par-tipo">Tipo <span aria-hidden="true">*</span></label>
+        <select id="par-tipo" name="tipo" required data-error="err-par-tipo">
+          <option value="">Elige tipo...</option>
+          <option value="Terminal">Terminal</option>
+          <option value="Paradero">Paradero</option>
+        </select>
+        <div id="err-par-tipo" class="error-msg">
+          <span role="img" aria-label="Error">❌</span> Elige Terminal o Paradero.
+        </div>
+      </div>
+      <div class="dialog-actions">
+        <button type="button" id="create-cancel-btn" class="btn">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- MODAL EDITAR PARADA -->
+  <dialog id="edit-parada-dialog" closedby="closerequest" aria-labelledby="edit-parada-title">
+    <h2 id="edit-parada-title">Editar parada</h2>
+    <form id="form-editar-parada" class="stack" novalidate>
+      <input type="hidden" id="edit-par-id" name="id">
+      <div class="field">
+        <label for="edit-par-nombre">Nombre <span aria-hidden="true">*</span></label>
+        <input id="edit-par-nombre" name="nombre" type="text" required minlength="2" maxlength="120" data-error="err-edit-nombre">
+        <div id="err-edit-nombre" class="error-msg">
+          <span role="img" aria-label="Error">❌</span> Escribe un nombre válido.
+        </div>
+      </div>
+      <div class="field">
+        <label for="edit-par-zona">Zona <span aria-hidden="true">*</span></label>
+        <input id="edit-par-zona" name="zona" type="text" required minlength="2" maxlength="60" data-error="err-edit-zona">
+        <div id="err-edit-zona" class="error-msg">
+          <span role="img" aria-label="Error">❌</span> Escribe una zona válida.
+        </div>
+      </div>
+      <div class="field">
+        <label for="edit-par-tipo">Tipo <span aria-hidden="true">*</span></label>
+        <input id="edit-par-tipo" name="tipo" type="text" required minlength="2" maxlength="60" data-error="err-edit-tipo">
+        <div id="err-edit-tipo" class="error-msg">
+          <span role="img" aria-label="Error">❌</span> Escribe un tipo válido.
+        </div>
+      </div>
+      <div class="dialog-actions">
+        <button type="button" id="edit-cancel-btn" class="btn">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- MODAL CREAR / EDITAR CONEXIÓN -->
+  <dialog id="conexion-dialog" closedby="closerequest" aria-labelledby="conexion-dialog-title">
+    <h2 id="conexion-dialog-title">Conectar paradas</h2>
+    <form id="form-conexion" class="stack" novalidate>
+      <div class="field">
+        <label for="con-origen">Desde <span aria-hidden="true">*</span></label>
+        <select id="con-origen" name="origen_id" required data-error="err-con-orig">
+          <option value="">Elige origen...</option>
+        </select>
+        <div id="err-con-orig" class="error-msg">
+          <span role="img" aria-label="Error">❌</span> Elige parada de origen.
+        </div>
+      </div>
+      <div class="field">
+        <label for="con-destino">Hasta <span aria-hidden="true">*</span></label>
+        <select id="con-destino" name="destino_id" required data-error="err-con-dest">
+          <option value="">Elige destino...</option>
+        </select>
+        <div id="err-con-dest" class="error-msg">
+          <span role="img" aria-label="Error">❌</span> Elige parada de destino.
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label for="con-minutos">Minutos <span aria-hidden="true">*</span></label>
+          <input id="con-minutos" name="minutos" type="number" min="1" max="240" step="1" required inputmode="numeric" data-error="err-con-min">
+          <div id="err-con-min" class="error-msg">
+            <span role="img" aria-label="Error">❌</span> Entero entre 1 y 240.
+          </div>
+        </div>
+        <div class="field">
+          <label for="con-km">Distancia (km) <span aria-hidden="true">*</span></label>
+          <input id="con-km" name="distancia_km" type="number" min="0.1" max="100" step="0.1" required inputmode="decimal" data-error="err-con-km">
+          <div id="err-con-km" class="error-msg">
+            <span role="img" aria-label="Error">❌</span> Mayor a 0.1 km.
+          </div>
+        </div>
+      </div>
+      <div class="dialog-actions">
+        <button type="button" id="con-cancel-btn" class="btn">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar conexión</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- MODAL CONFIRMAR ELIMINACIÓN -->
+  <dialog id="confirm-delete-dialog" closedby="any" aria-labelledby="delete-dialog-title">
+    <h2 id="delete-dialog-title">Confirmar eliminación</h2>
+    <p id="delete-dialog-body"></p>
+    <form method="dialog">
+      <div class="dialog-actions">
+        <button type="submit" value="cancel" class="btn" autofocus>Cancelar</button>
+        <button type="submit" value="confirm" class="btn btn-danger">Eliminar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast-region" aria-live="polite" aria-atomic="true">
+    <div id="toast" class="toast" hidden></div>
+  </div>
+
+  <script type="module">
+    // ==================== VALIDACIÓN ACCESIBLE ====================
+    const supportsUserInvalid = CSS.supports('selector(:user-invalid)');
+    const announcer = document.createElement('div');
+    announcer.setAttribute('aria-live', 'polite');
+    announcer.classList.add('visually-hidden');
+    document.body.append(announcer);
+
+    let announceTimer;
+    let announcedField;
+    const flagged = new WeakSet();
+    const announced = new WeakSet();
+    const dirtyState = new WeakMap();
+
+    const linkError = (el, shown) => {
+      const errorId = el.dataset.error;
+      if (!errorId) return;
+      const ids = (el.getAttribute('aria-describedby') || '').split(/\s+/).filter((id) => id && id !== errorId);
+      if (shown) ids.push(errorId);
+      if (ids.length) el.setAttribute('aria-describedby', ids.join(' '));
+      else el.removeAttribute('aria-describedby');
+    };
+
+    const spokenText = (node) => {
+      const copy = node.cloneNode(true);
+      copy.querySelectorAll('[aria-hidden="true"]').forEach((n) => n.remove());
+      copy.querySelectorAll('[role="img"][aria-label]').forEach((n) => n.replaceWith(`${n.getAttribute('aria-label')}: `));
+      return copy.textContent.replace(/\s+/g, ' ').trim();
+    };
+
+    const announceError = (el) => {
+      const error = document.getElementById(el.dataset.error || '');
+      if (!error) return;
+      const label = el.labels?.[0] ? `${spokenText(el.labels[0])}: ` : '';
+      clearTimeout(announceTimer);
+      announcer.textContent = '';
+      announcedField = el;
+      announceTimer = setTimeout(() => {
+        announcer.textContent = label + spokenText(error);
+      }, 500);
+    };
+
+    const isFieldInvalid = (el) => {
+      if (supportsUserInvalid) return el.matches(':user-invalid');
+      const state = dirtyState.get(el);
+      return Boolean(state?.hasBlurred && !el.validity.valid);
+    };
+
+    const syncAria = (el, announce = false) => {
+      if (!el.matches?.('input, select, textarea')) return;
+      const invalid = isFieldInvalid(el);
+      if (!supportsUserInvalid) {
+        const state = dirtyState.get(el);
+        el.classList.toggle('user-invalid-fallback', invalid);
+        el.classList.toggle('user-valid-fallback', Boolean(state?.hasBlurred && el.validity.valid));
+      }
+      if (invalid) {
+        if (announce && !announced.has(el)) {
+          announceError(el);
+          announced.add(el);
+        }
+        el.setAttribute('aria-invalid', 'true');
+        linkError(el, true);
+        flagged.add(el);
+      } else if (flagged.has(el) || el.getAttribute('aria-invalid') !== 'true') {
+        el.setAttribute('aria-invalid', 'false');
+        linkError(el, false);
+        flagged.delete(el);
+        announced.delete(el);
+        if (announcedField === el) {
+          clearTimeout(announceTimer);
+          announcer.textContent = '';
+        }
+      }
+    };
+
+    document.querySelectorAll('input, select, textarea').forEach((el) => syncAria(el));
+
+    document.addEventListener('blur', (e) => {
+      const target = e.target;
+      if (target.matches?.('input, select, textarea')) {
+        const st = dirtyState.get(target) || { hasInteracted: false, hasBlurred: false };
+        st.hasBlurred = true;
+        dirtyState.set(target, st);
+        syncAria(target, true);
+      }
+    }, true);
+
+    document.addEventListener('input', (e) => {
+      const target = e.target;
+      if (target.matches?.('input, select, textarea')) {
+        const st = dirtyState.get(target) || { hasInteracted: false, hasBlurred: false };
+        st.hasInteracted = true;
+        dirtyState.set(target, st);
+        if (target.hasAttribute('aria-invalid')) syncAria(target);
+      }
+    });
+
+    document.addEventListener('change', (e) => {
+      const target = e.target;
+      if (target.matches?.('input, select, textarea')) {
+        const st = dirtyState.get(target) || { hasInteracted: false, hasBlurred: false };
+        st.hasInteracted = true;
+        st.hasBlurred = true;
+        dirtyState.set(target, st);
+        syncAria(target, true);
+      }
+    }, true);
+
+    document.addEventListener('invalid', (e) => {
+      const target = e.target;
+      dirtyState.set(target, { hasInteracted: true, hasBlurred: true });
+      announced.add(target);
+      syncAria(target);
+    }, true);
+
+    document.addEventListener('reset', (e) => {
+      setTimeout(() => {
+        [...(e.target.elements || [])].forEach((el) => {
+          dirtyState.delete(el);
+          el.classList.remove('user-invalid-fallback', 'user-valid-fallback');
+          syncAria(el);
+        });
+      });
+    }, true);
+
+    if (!('closedBy' in HTMLDialogElement.prototype)) {
+      const outside = (e, dialog) => {
+        const r = dialog.getBoundingClientRect();
+        return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+      };
+      for (const dlg of document.querySelectorAll('dialog[closedby="any"]')) {
+        let pressedOutside = false;
+        dlg.addEventListener('pointerdown', (e) => { pressedOutside = outside(e, dlg); });
+        dlg.addEventListener('pointerup', (e) => { if (pressedOutside && outside(e, dlg)) dlg.close(); });
+      }
+    }
+
+    // ==================== ESTADO Y UTILIDADES ====================
+    const state = {
+      paradas: [],
+      conexiones: [],
+      originId: null,
+      destId: null,
+      activePlan: null,
+      selectedStopId: null,
+      selectedEdge: null,
+      connectMode: false,
+      connectFromId: null,
+    };
+
+    const mxn = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+    let toastTimer;
+
+    const showToast = (msg, kind = 'ok') => {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.dataset.kind = kind;
+      toast.hidden = false;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { toast.hidden = true; }, 4000);
+    };
+
+    async function apiFetch(url, options = {}) {
+      const res = await fetch(url, {
+        ...options,
+        signal: AbortSignal.timeout(8000),
+        headers: {
+          'Content-Type': 'application/json',
+          ...(options.headers || {}),
+        },
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const msg = typeof payload.detail === 'string'
+          ? payload.detail
+          : Array.isArray(payload.detail)
+            ? payload.detail.map((d) => d.msg).join(' · ')
+            : `No se pudo completar la solicitud (${res.status})`;
+        throw new Error(msg);
+      }
+      return payload;
+    }
+
+    const el = (tag, attrs = {}, text = '') => {
+      const node = document.createElement(tag);
+      Object.entries(attrs).forEach(([k, v]) => {
+        if (k === 'className') node.className = v;
+        else if (k.startsWith('data-')) node.setAttribute(k, v);
+        else node[k] = v;
+      });
+      if (text !== '') node.textContent = text;
+      return node;
+    };
+
+    const populateSelect = (selectEl, items, placeholder, getValue, getLabel) => {
+      const previous = selectEl.value;
+      const options = [el('option', { value: '' }, placeholder)];
+      for (const item of items) {
+        options.push(el('option', { value: getValue(item) }, getLabel(item)));
+      }
+      selectEl.replaceChildren(...options);
+      if (previous && items.some((i) => getValue(i) === previous)) {
+        selectEl.value = previous;
+      }
+    };
+
+    const syncAllSelects = () => {
+      for (const id of ['con-origen', 'con-destino']) {
+        populateSelect(
+          document.getElementById(id),
+          state.paradas,
+          'Elige una parada...',
+          (p) => p.id,
+          (p) => `${p.nombre} (${p.zona})`,
+        );
+      }
+    };
+
+    // ==================== PLANIFICADOR DE VIAJE ====================
+    async function runTripQuery() {
+      const origen = state.originId;
+      const destino = state.destId;
+      const tarifa = document.querySelector('input[name="tipo_tarifa"]:checked')?.value || 'general';
+      const box = document.getElementById('res-viaje');
+      const clearBtn = document.getElementById('clear-route-btn');
+
+      if (!origen || !destino) return;
+
+      try {
+        const plan = await apiFetch(
+          `/api/viaje/${encodeURIComponent(origen)}/${encodeURIComponent(destino)}?tipo_tarifa=${encodeURIComponent(tarifa)}`,
+        );
+        state.activePlan = plan;
+        clearBtn.hidden = false;
+        renderRouteMap();
+
+        if (!plan.tramos.length) {
+          box.replaceChildren(el('p', { style: 'margin:0;font-weight:600' }, 'Ya estás en esa misma parada.'));
+          return;
+        }
+
+        const strip = el('div', { className: 'summary-strip' });
+        const metrics = [
+          ['Tiempo estimado', `${plan.minutos_totales} min`],
+          ['Costo del viaje', mxn.format(plan.costo_total)],
+          ['Paradas', `${plan.numero_paradas}`],
+          ['Distancia', `${plan.distancia_total_km} km`],
+        ];
+        metrics.forEach(([label, val]) => {
+          const m = el('div', { className: 'metric-box' });
+          m.append(el('span', { className: 'metric-label' }, label), el('span', { className: 'metric-value' }, val));
+          strip.append(m);
+        });
+
+        const list = el('div', { className: 'step-list' });
+        plan.tramos.forEach((tramo, idx) => {
+          const step = el('div', { className: 'step-card' });
+          const main = el('div', { className: 'step-main' });
+          const num = el('span', { className: 'step-num' }, String(idx + 1));
+          const left = el('div');
+          left.append(
+            el('strong', {}, `${tramo.desde_nombre} → ${tramo.hacia_nombre}`),
+            el('div', { className: 'muted' }, `Parada ${idx + 1} a Parada ${idx + 2} · ${tramo.distancia_km} km`),
+          );
+          main.append(num, left);
+          const right = el('span', { className: 'badge badge-ok' }, `${tramo.minutos} min`);
+          step.append(main, right);
+          list.append(step);
+        });
+
+        box.replaceChildren(strip, list);
+      } catch (err) {
+        state.activePlan = null;
+        clearBtn.hidden = true;
+        renderRouteMap();
+        box.replaceChildren(el('p', { style: 'margin:0;color:var(--err);font-weight:600' }, err.message));
+      }
+    }
+
+    // ==================== BARRA CONTEXTUAL DEL MAPA (CRUD EN 1 CLIC) ====================
+    async function renderInspector() {
+      const bar = document.getElementById('inspector-bar');
+
+      if (state.selectedEdge) {
+        const c = state.selectedEdge;
+        bar.hidden = false;
+
+        const top = el('div', { className: 'row-between' });
+        const info = el('div');
+        info.append(
+          el('strong', {}, `Conexión: ${c.origen} → ${c.destino}`),
+          el('div', { className: 'muted' }, `${c.minutos} min · ${c.distancia_km} km`),
+        );
+
+        const actions = el('div', { className: 'actions-row' });
+        const editBtn = el('button', { type: 'button', className: 'btn btn-sm' }, 'Editar tramo');
+        editBtn.addEventListener('click', () => openConexionDialog(c));
+
+        const delBtn = el('button', { type: 'button', className: 'btn btn-danger btn-sm' }, 'Eliminar tramo');
+        delBtn.addEventListener('click', () => openDeleteEdgeDialog(c));
+
+        actions.append(editBtn, delBtn);
+        top.append(info, actions);
+        bar.replaceChildren(top);
+        return;
+      }
+
+      if (state.selectedStopId) {
+        const stop = state.paradas.find((p) => p.id === state.selectedStopId);
+        if (!stop) {
+          bar.hidden = true;
+          return;
+        }
+        bar.hidden = false;
+
+        const top = el('div', { className: 'row-between' });
+        const info = el('div');
+        info.append(
+          el('strong', {}, `${stop.nombre} (${stop.id})`),
+          el('div', { className: 'muted' }, `${stop.zona} · ${stop.tipo}`),
+        );
+
+        const actions = el('div', { className: 'actions-row' });
+
+        const hasOriginWaitingDest = Boolean(state.originId && !state.destId && !state.activePlan);
+        const hasDestWaitingOrigin = Boolean(state.destId && !state.originId && !state.activePlan);
+
+        const asOriginBtn = el('button', { type: 'button', className: 'btn btn-sm' }, 'Salir de aquí');
+        asOriginBtn.disabled = (!state.activePlan && state.originId === stop.id) || hasOriginWaitingDest;
+        asOriginBtn.addEventListener('click', async () => {
+          if (state.activePlan) {
+            state.destId = null;
+            state.activePlan = null;
+            document.getElementById('res-viaje').replaceChildren();
+          }
+          state.originId = stop.id;
+          document.getElementById('clear-route-btn').hidden = false;
+          if (state.destId) {
+            await runTripQuery();
+            renderInspector();
+          } else {
+            renderInspector();
+            renderRouteMap();
+            showToast(`Salida: ${stop.nombre}. Toca el destino (morado) y pulsa "Ir aquí".`);
+          }
+        });
+
+        const asDestBtn = el('button', { type: 'button', className: 'btn btn-primary btn-sm' }, 'Ir aquí');
+        asDestBtn.disabled = (!state.activePlan && state.destId === stop.id) || hasDestWaitingOrigin;
+        asDestBtn.addEventListener('click', async () => {
+          if (state.activePlan) {
+            state.originId = null;
+            state.activePlan = null;
+            document.getElementById('res-viaje').replaceChildren();
+          }
+          state.destId = stop.id;
+          document.getElementById('clear-route-btn').hidden = false;
+          if (state.originId) {
+            await runTripQuery();
+            renderInspector();
+          } else {
+            renderInspector();
+            renderRouteMap();
+            showToast(`Destino: ${stop.nombre}. Toca tu salida (azul) y pulsa "Salir de aquí".`);
+          }
+        });
+
+        const editBtn = el('button', { type: 'button', className: 'btn btn-sm' }, 'Editar');
+        editBtn.addEventListener('click', () => openEditDialog(stop));
+
+        const delBtn = el('button', { type: 'button', className: 'btn btn-danger btn-sm' }, 'Eliminar');
+        delBtn.addEventListener('click', () => openDeleteStopDialog(stop));
+
+        actions.append(asOriginBtn, asDestBtn, editBtn, delBtn);
+        top.append(info, actions);
+
+        const salidasWrap = el('div', { className: 'chip-list' });
+        salidasWrap.append(el('span', { className: 'muted' }, 'Cargando salidas directas...'));
+        bar.replaceChildren(top, salidasWrap);
+
+        try {
+          const salidas = await apiFetch(`/api/paradas/${encodeURIComponent(stop.id)}/salidas`);
+          if (state.selectedStopId !== stop.id) return;
+          if (!salidas.length) {
+            salidasWrap.replaceChildren(el('span', { className: 'muted' }, 'Sin salidas directas todavía. Usa "+ Conexión" para agregar una.'));
+          } else {
+            salidasWrap.replaceChildren(
+              ...salidas.map((s) =>
+                el('span', { className: 'chip' }, `→ ${s.destino} (${s.minutos} min · ${s.distancia_km} km)`),
+              ),
+            );
+          }
+        } catch {
+          salidasWrap.replaceChildren();
+        }
+        return;
+      }
+
+      bar.hidden = true;
+      bar.replaceChildren();
+    }
+
+    // ==================== MAPA DE GRAFOS INTERACTIVO ====================
+    const renderRouteMap = () => {
+      const svg = document.getElementById('route-map-svg');
+      const legend = document.getElementById('map-legend');
+      const defs = svg.querySelector('defs');
+      const stops = state.paradas;
+      const edges = state.conexiones;
+      svg.classList.toggle('is-connect-mode', state.connectMode);
+
+      if (!stops.length) {
+        legend.textContent = 'Sin paradas disponibles';
+        const emptyText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        emptyText.setAttribute('x', '470');
+        emptyText.setAttribute('y', '205');
+        emptyText.setAttribute('text-anchor', 'middle');
+        emptyText.setAttribute('fill', 'currentColor');
+        emptyText.textContent = 'No hay paradas cargadas. Crea una con "+ Parada".';
+        svg.replaceChildren(defs, emptyText);
+        return;
+      }
+
+      const presetCoords = {
+        'PAR-09': { x: 95, y: 315 },
+        'PAR-06': { x: 125, y: 120 },
+        'PAR-05': { x: 330, y: 50 },
+        'PAR-03': { x: 465, y: 135 },
+        'PAR-04': { x: 725, y: 55 },
+        'PAR-02': { x: 255, y: 255 },
+        'PAR-01': { x: 465, y: 255 },
+        'PAR-08': { x: 725, y: 160 },
+        'PAR-10': { x: 715, y: 355 },
+        'PAR-07': { x: 835, y: 255 },
+      };
+
+      const positions = new Map();
+      const extras = stops.filter((s) => !presetCoords[s.id]);
+      stops.forEach((s) => {
+        if (presetCoords[s.id]) positions.set(s.id, presetCoords[s.id]);
+      });
+
+      const placedCoords = [...positions.values()];
+      for (const s of extras) {
+        let bestPos = { x: 465, y: 360 };
+        let bestScore = -Infinity;
+        for (let gy = 52; gy <= 360; gy += 38) {
+          for (let gx = 95; gx <= 840; gx += 75) {
+            let minGap = Infinity;
+            for (const p of placedCoords) {
+              const gap = Math.max(Math.abs(gx - p.x) - 156, Math.abs(gy - p.y) - 46);
+              if (gap < minGap) minGap = gap;
+            }
+            if (minGap > bestScore) {
+              bestScore = minGap;
+              bestPos = { x: gx, y: gy };
+            }
+          }
+        }
+        positions.set(s.id, bestPos);
+        placedCoords.push(bestPos);
+      }
+
+      const plan = state.activePlan;
+      const hasPlan = Boolean(plan);
+      const stopOrder = new Map();
+      const activeEdgeKeys = new Set();
+
+      if (plan) {
+        if (!plan.tramos.length) {
+          stopOrder.set(plan.origen_id, 1);
+        } else {
+          stopOrder.set(plan.tramos[0].desde_id, 1);
+          plan.tramos.forEach((t, idx) => {
+            if (!stopOrder.has(t.hacia_id)) {
+              stopOrder.set(t.hacia_id, idx + 2);
+            }
+            activeEdgeKeys.add(`${t.desde_id}->${t.hacia_id}`);
+          });
+        }
+      }
+
+      if (state.connectMode) {
+        const fromStop = stops.find((s) => s.id === state.connectFromId);
+        legend.textContent = fromStop
+          ? `Conectando desde "${fromStop.nombre}": toca la parada destino`
+          : 'Modo conexión: toca primero la parada de salida y luego la de llegada';
+      } else if (plan) {
+        legend.textContent = plan.tramos.length
+          ? `Recorrido en orden (1 → ${stopOrder.size}): ${plan.minutos_totales} min`
+          : `Parada seleccionada (1): ${plan.origen}`;
+      } else if (state.originId) {
+        const origStop = stops.find((s) => s.id === state.originId);
+        legend.textContent = origStop
+          ? `Salida: "${origStop.nombre}" (azul) · Toca tu destino (morado) y pulsa "Ir aquí"`
+          : 'Haz clic en una parada o flecha para editar o viajar';
+      } else if (state.destId) {
+        const destStop = stops.find((s) => s.id === state.destId);
+        legend.textContent = destStop
+          ? `Destino: "${destStop.nombre}" (morado) · Toca tu salida (azul) y pulsa "Salir de aquí"`
+          : 'Haz clic en una parada o flecha para editar o viajar';
+      } else {
+        legend.textContent = 'Haz clic en una parada o flecha para editar o viajar';
+      }
+
+      const hw = 78;
+      const hh = 23;
+      const svgNodes = [defs];
+      const activeLabels = [];
+
+      const orderedEdges = edges.toSorted((a, b) => {
+        const aOn = activeEdgeKeys.has(`${a.origen_id}->${a.destino_id}`) ? 1 : 0;
+        const bOn = activeEdgeKeys.has(`${b.origen_id}->${b.destino_id}`) ? 1 : 0;
+        return aOn - bOn;
+      });
+
+      const boxGapDist = (ux, uy, halfW, halfH) =>
+        Math.min(halfW / Math.max(Math.abs(ux), 1e-6), halfH / Math.max(Math.abs(uy), 1e-6));
+
+      const placedEdgeSamples = [];
+      const edgeRoutes = new Map();
+
+      for (const edge of orderedEdges) {
+        const p1 = positions.get(edge.origen_id);
+        const p2 = positions.get(edge.destino_id);
+        if (!p1 || !p2) continue;
+
+        const dx = p2.x - p1.x;
+        const dy = p2.y - p1.y;
+        const dist = Math.hypot(dx, dy) || 1;
+        const nx = -dy / dist;
+        const ny = dx / dist;
+
+        const reverseExists = edges.some(
+          (other) => other.origen_id === edge.destino_id && other.destino_id === edge.origen_id,
+        );
+        const baseBow = Math.min(44, Math.max(30, Math.round(dist * 0.13)));
+        const candidates = reverseExists
+          ? [baseBow, baseBow + 24, baseBow + 52, baseBow + 84, baseBow + 116, baseBow + 150, -baseBow - 24]
+          : [0, 30, -30, 56, -56, 86, -86, 118, -118, 150, -150, 180, -180];
+
+        const otherStops = stops
+          .filter((st) => st.id !== edge.origen_id && st.id !== edge.destino_id)
+          .map((st) => positions.get(st.id))
+          .filter(Boolean);
+
+        let bestRoute = null;
+        let bestCost = Infinity;
+
+        for (const bow of candidates) {
+          const cx = (p1.x + p2.x) / 2 + nx * bow;
+          const cy = (p1.y + p2.y) / 2 + ny * bow;
+
+          const sdx = cx - p1.x;
+          const sdy = cy - p1.y;
+          const sLen = Math.hypot(sdx, sdy) || 1;
+          const t1x = sdx / sLen;
+          const t1y = sdy / sLen;
+
+          const edx = p2.x - cx;
+          const edy = p2.y - cy;
+          const eLen = Math.hypot(edx, edy) || 1;
+          const t2x = edx / eLen;
+          const t2y = edy / eLen;
+
+          const dStart = boxGapDist(t1x, t1y, hw + 7, hh + 7);
+          const dEnd = boxGapDist(t2x, t2y, hw + 10, hh + 10);
+          const x1 = p1.x + t1x * dStart;
+          const y1 = p1.y + t1y * dStart;
+          const x2 = p2.x - t2x * dEnd;
+          const y2 = p2.y - t2y * dEnd;
+
+          let cost = Math.abs(bow) * 0.08;
+          const samples = [];
+
+          for (let i = 1; i <= 15; i++) {
+            const t = i / 16;
+            const mt = 1 - t;
+            const qx = mt * mt * x1 + 2 * mt * t * cx + t * t * x2;
+            const qy = mt * mt * y1 + 2 * mt * t * cy + t * t * y2;
+            samples.push({ x: qx, y: qy });
+
+            if (qx < 16 || qx > 924 || qy < 16 || qy > 394) cost += 250;
+
+            for (const oPos of otherStops) {
+              const ox = Math.abs(qx - oPos.x);
+              const oy = Math.abs(qy - oPos.y);
+              if (ox < hw + 14 && oy < hh + 14) {
+                cost += ox < hw + 4 && oy < hh + 4 ? 1200 : 220;
+              }
+            }
+
+            for (const prev of placedEdgeSamples) {
+              const dEdge = Math.hypot(qx - prev.x, qy - prev.y);
+              if (dEdge < 20) {
+                cost += (20 - dEdge) * 14;
+              }
+            }
+          }
+
+          if (cost < bestCost) {
+            bestCost = cost;
+            bestRoute = { x1, y1, cx, cy, x2, y2, samples };
+          }
+        }
+
+        if (bestRoute) {
+          placedEdgeSamples.push(...bestRoute.samples);
+          edgeRoutes.set(`${edge.origen_id}->${edge.destino_id}`, bestRoute);
+        }
+      }
+
+      for (const edge of orderedEdges) {
+        const key = `${edge.origen_id}->${edge.destino_id}`;
+        const route = edgeRoutes.get(key);
+        if (!route) continue;
+
+        const isActive = activeEdgeKeys.has(key);
+        const isEdgeSelected =
+          state.selectedEdge &&
+          state.selectedEdge.origen_id === edge.origen_id &&
+          state.selectedEdge.destino_id === edge.destino_id;
+
+        const { x1, y1, cx, cy, x2, y2 } = route;
+        const dPath = `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
+
+        const hit = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        hit.setAttribute('d', dPath);
+        hit.setAttribute('class', 'map-edge-hit');
+        hit.setAttribute('aria-label', `Conexión ${edge.origen} a ${edge.destino}`);
+        hit.addEventListener('click', (e) => {
+          e.stopPropagation();
+          state.selectedStopId = null;
+          state.selectedEdge = edge;
+          renderInspector();
+          renderRouteMap();
+        });
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', dPath);
+        path.setAttribute(
+          'class',
+          `map-edge ${isEdgeSelected ? 'is-selected' : hasPlan ? (isActive ? 'is-active' : 'is-dimmed') : ''}`.trim(),
+        );
+        path.setAttribute(
+          'marker-end',
+          isEdgeSelected ? 'url(#arrow-selected)' : isActive ? 'url(#arrow-route)' : 'url(#arrow-muted)',
+        );
+        svgNodes.push(hit, path);
+
+        if (isActive) {
+          const lx = 0.25 * x1 + 0.5 * cx + 0.25 * x2;
+          const ly = 0.25 * y1 + 0.5 * cy + 0.25 * y2;
+
+          const pill = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          pill.setAttribute('x', String(lx - 24));
+          pill.setAttribute('y', String(ly - 9));
+          pill.setAttribute('width', '48');
+          pill.setAttribute('height', '18');
+          pill.setAttribute('rx', '9');
+          pill.setAttribute('class', 'map-edge-pill');
+
+          const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          label.setAttribute('x', String(lx));
+          label.setAttribute('y', String(ly + 4));
+          label.setAttribute('text-anchor', 'middle');
+          label.setAttribute('class', 'map-edge-label');
+          label.textContent = `${edge.minutos} min`;
+          activeLabels.push(pill, label);
+        }
+      }
+
+      svgNodes.push(...activeLabels);
+
+      const orderedStops = stops.toSorted((a, b) => (stopOrder.has(a.id) ? 1 : 0) - (stopOrder.has(b.id) ? 1 : 0));
+
+      for (const s of orderedStops) {
+        const pos = positions.get(s.id);
+        const orderNum = stopOrder.get(s.id);
+        const isActive = orderNum !== undefined;
+        const isOriginEndpoint = hasPlan && s.id === plan.origen_id;
+        const isDestEndpoint = hasPlan && s.id === plan.destino_id && s.id !== plan.origen_id;
+        const isOriginPicked = !state.connectMode && !hasPlan && state.originId === s.id;
+        const isDestPicked = !state.connectMode && !hasPlan && state.destId === s.id;
+        const isDestCandidate =
+          !state.connectMode &&
+          !hasPlan &&
+          Boolean(state.originId) &&
+          !state.destId &&
+          state.selectedStopId === s.id &&
+          s.id !== state.originId;
+        const isOriginCandidate =
+          !state.connectMode &&
+          !hasPlan &&
+          Boolean(state.destId) &&
+          !state.originId &&
+          state.selectedStopId === s.id &&
+          s.id !== state.destId;
+        const isDestHighlight = isDestPicked || isDestCandidate;
+        const isSelected = state.connectMode
+          ? state.connectFromId === s.id
+          : isOriginPicked || isOriginCandidate || (!isDestHighlight && state.selectedStopId === s.id);
+
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('tabindex', '0');
+        g.setAttribute('role', 'button');
+        g.setAttribute('aria-label', `Parada ${s.nombre}, zona ${s.zona}`);
+        g.setAttribute(
+          'class',
+          `map-node ${isDestHighlight ? 'is-dest-candidate' : isSelected ? 'is-selected' : hasPlan ? (isActive ? 'is-active' : 'is-dimmed') : ''} ${isOriginEndpoint ? 'is-endpoint' : ''} ${isDestEndpoint ? 'is-dest-endpoint' : ''}`.trim(),
+        );
+
+        const handleStopActivate = () => {
+          if (state.connectMode) {
+            if (!state.connectFromId) {
+              state.connectFromId = s.id;
+              renderRouteMap();
+              return;
+            }
+            if (state.connectFromId === s.id) {
+              showToast('Elige una parada destino distinta.', 'err');
+              return;
+            }
+            const fromId = state.connectFromId;
+            if (state.conexiones.some((c) => c.origen_id === fromId && c.destino_id === s.id)) {
+              const fromStop = stops.find((p) => p.id === fromId);
+              showToast(
+                `Ya existe una conexión de ${fromStop?.nombre || fromId} a ${s.nombre}. Elige otro destino o edita la flecha.`,
+                'err',
+              );
+              return;
+            }
+            state.connectMode = false;
+            state.connectFromId = null;
+            document.getElementById('toggle-connect-btn').setAttribute('aria-pressed', 'false');
+            openConexionDialog({ origen_id: fromId, destino_id: s.id });
+            renderRouteMap();
+            return;
+          }
+
+          state.selectedEdge = null;
+          state.selectedStopId = s.id;
+          renderInspector();
+          renderRouteMap();
+        };
+
+        g.addEventListener('click', (e) => {
+          e.stopPropagation();
+          handleStopActivate();
+        });
+        g.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleStopActivate();
+          }
+        });
+
+        const titleTip = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        titleTip.textContent = isActive
+          ? `${orderNum}. ${s.nombre} (${s.zona})`
+          : `${s.nombre} (${s.zona} · ${s.tipo})`;
+
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', String(pos.x - hw));
+        rect.setAttribute('y', String(pos.y - hh));
+        rect.setAttribute('width', String(hw * 2));
+        rect.setAttribute('height', String(hh * 2));
+        rect.setAttribute('rx', '10');
+
+        const shortName = s.nombre.length > 21 ? `${s.nombre.slice(0, 19)}…` : s.nombre;
+        const nameEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        nameEl.setAttribute('x', String(pos.x));
+        nameEl.setAttribute('y', String(pos.y - 3));
+        nameEl.setAttribute('text-anchor', 'middle');
+        nameEl.setAttribute('font-size', '11');
+        nameEl.setAttribute('font-weight', isActive || !hasPlan ? '700' : '500');
+        nameEl.textContent = shortName;
+
+        let subText = s.zona;
+        if (hasPlan && s.id === plan.origen_id) subText = 'Origen';
+        else if (hasPlan && s.id === plan.destino_id) subText = 'Destino';
+        else if (hasPlan && isActive) subText = 'Paso';
+        else if (isOriginPicked || isOriginCandidate) subText = 'Origen';
+        else if (isDestHighlight) subText = 'Destino';
+
+        const subEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        subEl.setAttribute('x', String(pos.x));
+        subEl.setAttribute('y', String(pos.y + 13));
+        subEl.setAttribute('text-anchor', 'middle');
+        subEl.setAttribute('class', 'node-sub');
+        subEl.textContent = subText;
+
+        g.append(titleTip, rect, nameEl, subEl);
+
+        if (isActive) {
+          const cx = pos.x - hw + 2;
+          const cy = pos.y - hh - 4;
+          const badge = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          badge.setAttribute('cx', String(cx));
+          badge.setAttribute('cy', String(cy));
+          badge.setAttribute('r', '11.5');
+          badge.setAttribute('class', 'map-order-badge');
+
+          const badgeText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          badgeText.setAttribute('x', String(cx));
+          badgeText.setAttribute('y', String(cy + 4));
+          badgeText.setAttribute('text-anchor', 'middle');
+          badgeText.setAttribute('class', 'map-order-text');
+          badgeText.textContent = String(orderNum);
+
+          g.append(badge, badgeText);
+        }
+
+        svgNodes.push(g);
+      }
+
+      svg.replaceChildren(...svgNodes);
+    };
+
+    // ==================== CARGA DE DATOS ====================
+    async function loadData() {
+      const pill = document.getElementById('health-pill');
+      const notice = document.getElementById('service-notice');
+
+      try {
+        const health = await apiFetch('/api/health');
+        pill.dataset.state = health.status;
+        pill.textContent = health.connected ? 'En línea' : 'Sin servicio';
+
+        if (!health.connected) {
+          notice.hidden = false;
+          notice.textContent = 'El sistema no está conectado en este momento. Intenta de nuevo en unos momentos.';
+          state.paradas = [];
+          state.conexiones = [];
+          state.activePlan = null;
+          state.selectedStopId = null;
+          state.selectedEdge = null;
+          syncAllSelects();
+          renderInspector();
+          renderRouteMap();
+          return;
+        }
+
+        notice.hidden = true;
+        const red = await apiFetch('/api/red');
+        state.paradas = red.paradas;
+        state.conexiones = red.conexiones;
+        syncAllSelects();
+        renderInspector();
+        renderRouteMap();
+      } catch (err) {
+        pill.dataset.state = 'error';
+        pill.textContent = 'Sin conexión';
+        notice.hidden = false;
+        notice.textContent = err.message;
+      }
+    }
+
+    // ==================== VALIDACIÓN Y BLOQUEO ====================
+    function validateForm(form) {
+      const controls = [...form.querySelectorAll('input, select, textarea')];
+      controls.forEach((ctrl) => {
+        dirtyState.set(ctrl, { hasInteracted: true, hasBlurred: true });
+      });
+      if (!form.checkValidity()) {
+        controls.forEach((ctrl) => syncAria(ctrl));
+        form.querySelector(':invalid')?.focus();
+        return false;
+      }
+      return true;
+    }
+
+    async function withSubmitLock(form, fn) {
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+      try {
+        await fn();
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    }
+
+    // ==================== EVENTOS PRINCIPALES ====================
+    document.querySelectorAll('input[name="tipo_tarifa"]').forEach((radio) => {
+      radio.addEventListener('change', () => {
+        if (state.originId && state.destId && state.activePlan) runTripQuery();
+      });
+    });
+
+    document.getElementById('clear-route-btn').addEventListener('click', () => {
+      state.originId = null;
+      state.destId = null;
+      state.activePlan = null;
+      document.getElementById('clear-route-btn').hidden = true;
+      document.getElementById('res-viaje').replaceChildren();
+      renderInspector();
+      renderRouteMap();
+    });
+
+    document.getElementById('toggle-connect-btn').addEventListener('click', (e) => {
+      state.connectMode = !state.connectMode;
+      state.connectFromId = null;
+      state.selectedStopId = null;
+      state.selectedEdge = null;
+      e.currentTarget.setAttribute('aria-pressed', String(state.connectMode));
+      renderInspector();
+      renderRouteMap();
+    });
+
+    document.querySelector('.map-frame').addEventListener('click', (e) => {
+      if (e.target.closest('.map-node, .map-edge-hit')) return;
+      if (!state.selectedStopId && !state.selectedEdge && !state.connectFromId) return;
+      state.selectedStopId = null;
+      state.selectedEdge = null;
+      state.connectFromId = null;
+      renderInspector();
+      renderRouteMap();
+    });
+
+    // ==================== DIALOGS CRUD ====================
+    const createDialog = document.getElementById('create-parada-dialog');
+    const createForm = document.getElementById('form-crear-parada');
+    const nextParadaCode = () => {
+      let maxNum = 0;
+      for (const p of state.paradas) {
+        const match = /^PAR-(\d+)$/i.exec(p.id);
+        if (match) maxNum = Math.max(maxNum, Number.parseInt(match[1], 10));
+      }
+      return `PAR-${String(maxNum + 1).padStart(2, '0')}`;
+    };
+    document.getElementById('open-create-parada').addEventListener('click', () => {
+      createForm.reset();
+      document.getElementById('par-id').value = nextParadaCode();
+      createDialog.showModal();
+    });
+    document.getElementById('create-cancel-btn').addEventListener('click', () => createDialog.close('cancel'));
+    createDialog.addEventListener('close', () => { createDialog.returnValue = ''; });
+
+    createForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validateForm(createForm)) return;
+      await withSubmitLock(createForm, async () => {
+        const body = {
+          nombre: document.getElementById('par-nombre').value,
+          zona: document.getElementById('par-zona').value,
+          tipo: document.getElementById('par-tipo').value,
+        };
+        try {
+          const created = await apiFetch('/api/paradas', { method: 'POST', body: JSON.stringify(body) });
+          createDialog.close('created');
+          state.selectedStopId = created.parada.id;
+          state.selectedEdge = null;
+          showToast(`Parada "${created.parada.nombre}" agregada.`);
+          await loadData();
+        } catch (err) {
+          showToast(err.message, 'err');
+        }
+      });
+    });
+
+    const editDialog = document.getElementById('edit-parada-dialog');
+    const editForm = document.getElementById('form-editar-parada');
+    const openEditDialog = (parada) => {
+      editForm.reset();
+      document.getElementById('edit-par-id').value = parada.id;
+      document.getElementById('edit-par-nombre').value = parada.nombre;
+      document.getElementById('edit-par-zona').value = parada.zona;
+      document.getElementById('edit-par-tipo').value = parada.tipo;
+      editDialog.showModal();
+    };
+    document.getElementById('edit-cancel-btn').addEventListener('click', () => editDialog.close('cancel'));
+    editDialog.addEventListener('close', () => { editDialog.returnValue = ''; });
+
+    editForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validateForm(editForm)) return;
+      await withSubmitLock(editForm, async () => {
+        const id = document.getElementById('edit-par-id').value;
+        const body = {
+          nombre: document.getElementById('edit-par-nombre').value,
+          zona: document.getElementById('edit-par-zona').value,
+          tipo: document.getElementById('edit-par-tipo').value,
+        };
+        try {
+          await apiFetch(`/api/paradas/${encodeURIComponent(id)}`, { method: 'PUT', body: JSON.stringify(body) });
+          editDialog.close('saved');
+          showToast('Parada actualizada.');
+          await loadData();
+          if (state.activePlan) await runTripQuery();
+        } catch (err) {
+          showToast(err.message, 'err');
+        }
+      });
+    });
+
+    const conexionDialog = document.getElementById('conexion-dialog');
+    const conexionForm = document.getElementById('form-conexion');
+    let conexionEditMode = false;
+    const openConexionDialog = (prefill = {}) => {
+      conexionForm.reset();
+      conexionEditMode = Boolean(prefill.minutos);
+      const origSelect = document.getElementById('con-origen');
+      const destSelect = document.getElementById('con-destino');
+      document.getElementById('conexion-dialog-title').textContent = conexionEditMode
+        ? 'Editar conexión'
+        : 'Conectar paradas';
+      if (prefill.origen_id) {
+        origSelect.value = prefill.origen_id;
+        origSelect.disabled = true;
+      } else {
+        origSelect.disabled = false;
+      }
+      if (prefill.destino_id) {
+        destSelect.value = prefill.destino_id;
+        destSelect.disabled = true;
+      } else {
+        destSelect.disabled = false;
+      }
+      if (prefill.minutos) document.getElementById('con-minutos').value = String(prefill.minutos);
+      if (prefill.distancia_km) document.getElementById('con-km').value = String(prefill.distancia_km);
+      conexionDialog.showModal();
+    };
+    document.getElementById('con-cancel-btn').addEventListener('click', () => conexionDialog.close('cancel'));
+    conexionDialog.addEventListener('close', () => { conexionDialog.returnValue = ''; });
+
+    conexionForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validateForm(conexionForm)) return;
+      await withSubmitLock(conexionForm, async () => {
+        const body = {
+          origen_id: document.getElementById('con-origen').value,
+          destino_id: document.getElementById('con-destino').value,
+          minutos: Number.parseInt(document.getElementById('con-minutos').value, 10),
+          distancia_km: Number.parseFloat(document.getElementById('con-km').value),
+        };
+        try {
+          const saved = conexionEditMode
+            ? await apiFetch(
+              `/api/conexiones/${encodeURIComponent(body.origen_id)}/${encodeURIComponent(body.destino_id)}`,
+              {
+                method: 'PUT',
+                body: JSON.stringify({ minutos: body.minutos, distancia_km: body.distancia_km }),
+              },
+            )
+            : await apiFetch('/api/conexiones', { method: 'POST', body: JSON.stringify(body) });
+          conexionDialog.close('saved');
+          state.selectedEdge = saved;
+          state.selectedStopId = null;
+          showToast('Conexión guardada.');
+          await loadData();
+          if (state.activePlan) await runTripQuery();
+        } catch (err) {
+          showToast(err.message, 'err');
+        }
+      });
+    });
+
+    let pendingDelete = null;
+    const deleteDialog = document.getElementById('confirm-delete-dialog');
+
+    const openDeleteStopDialog = (parada) => {
+      pendingDelete = { kind: 'stop', parada };
+      document.getElementById('delete-dialog-body').textContent =
+        `¿Eliminar la parada "${parada.nombre}" y sus conexiones del mapa?`;
+      deleteDialog.showModal();
+    };
+
+    const openDeleteEdgeDialog = (edge) => {
+      pendingDelete = { kind: 'edge', edge };
+      document.getElementById('delete-dialog-body').textContent =
+        `¿Quitar la conexión ${edge.origen} → ${edge.destino}?`;
+      deleteDialog.showModal();
+    };
+
+    deleteDialog.addEventListener('close', async () => {
+      const action = deleteDialog.returnValue;
+      deleteDialog.returnValue = '';
+      const target = pendingDelete;
+      pendingDelete = null;
+      if (action !== 'confirm' || !target) return;
+
+      try {
+        if (target.kind === 'stop') {
+          await apiFetch(`/api/paradas/${encodeURIComponent(target.parada.id)}`, { method: 'DELETE' });
+          if (state.selectedStopId === target.parada.id) state.selectedStopId = null;
+          if (state.originId === target.parada.id) state.originId = null;
+          if (state.destId === target.parada.id) state.destId = null;
+          state.activePlan = null;
+          document.getElementById('clear-route-btn').hidden = true;
+          document.getElementById('res-viaje').replaceChildren();
+          showToast('Parada eliminada.');
+        } else {
+          const e = target.edge;
+          await apiFetch(
+            `/api/conexiones/${encodeURIComponent(e.origen_id)}/${encodeURIComponent(e.destino_id)}`,
+            { method: 'DELETE' },
+          );
+          state.selectedEdge = null;
+          showToast('Conexión eliminada.');
+        }
+        await loadData();
+        if (state.activePlan) await runTripQuery();
+      } catch (err) {
+        showToast(err.message, 'err');
+      }
+    });
+
+    loadData();
+  </script>
+</body>
+</html>

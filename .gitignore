@@ -1,0 +1,22 @@
+# Entorno y credenciales
+.env
+.env.local
+
+# Entornos virtuales Python
+.venv/
+venv/
+env/
+
+# Cachés de Python y pytest
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Sistema operativo e IDEs
+.DS_Store
+.vscode/
+.idea/
+
